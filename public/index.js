@@ -1,3 +1,7 @@
+const RENDERHOSTNAME = 'srv-ch2thitgk4qarqitcjh0-kn-00004-deployment-75b9d856c4-7gzf9'
+
+const HOSTNAME = RENDERHOSTNAME
+
 class Product{
     //deal with a single product
 
@@ -26,7 +30,7 @@ class Product{
         return html
     }
     async deleteProduct(id) {
-        await fetch(`http://localhost:3000/products/${id}`, {
+        await fetch(`${HOSTNAME}:3000/products/${id}`, {
             method:'DELETE',
             headers:{
                 "Content-Type": "application/json"
@@ -34,7 +38,7 @@ class Product{
         })
     }
     async updateProduct(id){
-        const response = await fetch(`http://localhost:3000/products/${id}`)
+        const response = await fetch(`${HOSTNAME}:3000/products/${id}`)
         const product = await response.json()
       
        this.prePopulate(product)
@@ -53,7 +57,7 @@ class Product{
 
     async sendUpdate(product){
         
-        await fetch(`http://localhost:3000/products/${product.id}`, {
+        await fetch(`${HOSTNAME}:3000/products/${product.id}`, {
             method:'PUT',
             body:JSON.stringify(product),
             headers:{
@@ -78,7 +82,7 @@ class Product{
     }
     async addProduct(){
         const newProduct =new Product().readValues();
-        await fetch(' http://localhost:3000/products', {
+        await fetch(`${HOSTNAME}:3000/products`, {
             method:'POST',
             body:JSON.stringify(newProduct),
             headers:{
@@ -113,7 +117,7 @@ class ProductList{
      }
 
      async fetchProduct(){
-        const response = await fetch('http://localhost:3000/products')
+        const response = await fetch(`${HOSTNAME}:3000/products`)
         const products = await response.json()
         return products
      }
@@ -194,7 +198,7 @@ class Cart {
     }
 
     async getItemDetails(itemId) {
-        let response = await fetch(`http://localhost:3000/products/${itemId}`)
+        let response = await fetch(`${HOSTNAME}:3000/products/${itemId}`)
         if (response.status == 200) {
             return await response.json()
         }
