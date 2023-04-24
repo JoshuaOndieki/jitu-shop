@@ -1,6 +1,4 @@
-const RENDERHOSTNAME = 'srv-ch2thitgk4qarqitcjh0-kn-00004-deployment-75b9d856c4-7gzf9'
-
-const HOSTNAME = RENDERHOSTNAME
+const HOSTNAME = 'http://localhost'
 
 class Product{
     //deal with a single product
