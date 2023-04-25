@@ -1,67 +1,63 @@
 const express = require('express')
 const path = require('path')
-const os = require('os')
 const app = express()
 require('dotenv').config()
 const APPPORT = process.env.APPPORT || 8080
+const jsonServerPort = process.env.JSONSERVERPORT || 3000
+const localhost = 'localhost'
 
 
-function ipHostCheck() {
-  const https = require('https');
+const { exec } = require('child_process');
 
-  https.get(`https://api.ipdata.co?api-key=${process.env.IP_DATA_API_KEY}`, (response) => {
-    let data = '';
-  
-    response.on('data', (chunk) => {
-      data += chunk;
-    });
-  
-    response.on('end', () => {
-      let myIP = JSON.parse(data).ip
-      // console.log(JSON.parse(data));
-      console.log(`CURRENT IP ADDRESS: ${myIP}`);
-  
-      // https.get(`${myIP}:3000/products`, (response) => {
-      //   let data = '';
-      
-      //   response.on('data', (chunk) => {
-      //     data += chunk;
-      //   });
-      
-      //   response.on('end', () => {
-      //     console.log('json-server data: ', data);
-      //   });
-      // });
-    });
-  });
+async function getIp(){
+  const {stdout, stderr} = await new Promise ((resolve, reject)=>{
+    exec('ipconfig | findstr /i "IPv4"', async (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${error.message}`);
+      reject(error)
+    }
+    resolve({stdout, stderr})
+  });})
+
+  const ipv4Regex = /IPv4*/i;
+  const match = ipv4Regex.exec(stdout);
+  let ip = match.input.split(':')[1].trim()
+  return ip
 }
 
-
-
+app.set('view engine', 'ejs');
 app.use('/public', express.static(__dirname + '/public'));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/index.html'))
+app.get('/', async (req, res) => {
+    res.render(path.join(__dirname, 'views/index.ejs'), {FETCH_HOSTNAME: await getIp(), FETCH_PORT: jsonServerPort})
 });
 
+
 // RUN THE APP TO SERVE index.html
-app.listen(APPPORT, () => {
-    console.log(`HOSTNAME: ${os.hostname()} APP Listening on PORT: ${APPPORT}`)
-    ipHostCheck()
+app.listen(APPPORT, async() => {
+    console.log(`APP RUNNING AT ${await getIp()}:${APPPORT}`)
 });
 
 
 
 // RUN THE JSON SERVER TO SERVE db.json
 const jsonServer = require('json-server');
+// const { get } = require('http')
 const server = jsonServer.create();
 const router = jsonServer.router('db.json');
 const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
 server.use(router);
-const jsonServerPort = process.env.JSONSERVERPORT || 3000
-const localhost = 'localhost'
-server.listen(jsonServerPort, localhost, () => {
-  console.log(`JSON SERVER RUNNING AT http://${localhost}:${jsonServerPort}`)
-});
+
+async function runJsonServer() {
+  let ip = await getIp()
+  // console.log(ip);
+  server.listen(jsonServerPort, ip || localhost, () => {
+    console.log(`JSON SERVER RUNNING AT http://${ip || localhost}:${jsonServerPort}`)
+  });
+
+}
+
+
+runJsonServer()
