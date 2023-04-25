@@ -1,17 +1,18 @@
 const express = require('express')
 const path = require('path')
+const os = require('os')
 const app = express()
+const { exec } = require('child_process');
 require('dotenv').config()
 const APPPORT = process.env.APPPORT || 8080
 const jsonServerPort = process.env.JSONSERVERPORT || 3000
 const localhost = 'localhost'
 
 
-const { exec } = require('child_process');
-
 async function getIp(){
+  const command = os.platform() === 'win32' ? 'ipconfig | findstr /i "IPv4"' : 'hostname -I'
   const {stdout, stderr} = await new Promise ((resolve, reject)=>{
-    exec('ipconfig | findstr /i "IPv4"', async (error, stdout, stderr) => {
+    exec(command, async (error, stdout, stderr) => {
     if (error) {
       console.error(`Error: ${error.message}`);
       reject(error)
@@ -19,9 +20,15 @@ async function getIp(){
     resolve({stdout, stderr})
   });})
 
-  const ipv4Regex = /IPv4*/i;
-  const match = ipv4Regex.exec(stdout);
-  let ip = match.input.split(':')[1].trim()
+  let ip;
+  if (os.platform() === 'win32') {
+    const ipv4Regex = /IPv4*/i;
+    const match = ipv4Regex.exec(stdout);
+    ip = match.input.split(':')[1].trim()
+  } else {
+    ip = stdout.trim()
+  }
+
   return ip
 }
 
