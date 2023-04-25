@@ -1,4 +1,8 @@
-const HOSTNAME = 'http://localhost'
+console.log(FETCH_HOSTNAME, FETCH_PORT);
+
+FETCH_HOSTNAME =  FETCH_HOSTNAME || 'localhost'
+FETCH_PORT = FETCH_PORT || '3000'
+
 
 class Product{
     //deal with a single product
@@ -28,7 +32,7 @@ class Product{
         return html
     }
     async deleteProduct(id) {
-        await fetch(`${HOSTNAME}:3000/products/${id}`, {
+        await fetch(`//${FETCH_HOSTNAME}:${FETCH_PORT}/products/${id}`, {
             method:'DELETE',
             headers:{
                 "Content-Type": "application/json"
@@ -36,7 +40,7 @@ class Product{
         })
     }
     async updateProduct(id){
-        const response = await fetch(`${HOSTNAME}:3000/products/${id}`)
+        const response = await fetch(`//${FETCH_HOSTNAME}:${FETCH_PORT}/products/${id}`)
         const product = await response.json()
       
        this.prePopulate(product)
@@ -55,7 +59,7 @@ class Product{
 
     async sendUpdate(product){
         
-        await fetch(`${HOSTNAME}:3000/products/${product.id}`, {
+        await fetch(`//${FETCH_HOSTNAME}:${FETCH_PORT}/products/${product.id}`, {
             method:'PUT',
             body:JSON.stringify(product),
             headers:{
@@ -80,7 +84,7 @@ class Product{
     }
     async addProduct(){
         const newProduct =new Product().readValues();
-        await fetch(`${HOSTNAME}:3000/products`, {
+        await fetch(`//${FETCH_HOSTNAME}:${FETCH_PORT}/products`, {
             method:'POST',
             body:JSON.stringify(newProduct),
             headers:{
@@ -115,7 +119,8 @@ class ProductList{
      }
 
      async fetchProduct(){
-        const response = await fetch(`${HOSTNAME}:3000/products`)
+        console.log('fetch product: ', FETCH_HOSTNAME, FETCH_PORT);
+        const response = await fetch(`//${FETCH_HOSTNAME}:${FETCH_PORT}/products`)
         const products = await response.json()
         return products
      }
@@ -196,7 +201,7 @@ class Cart {
     }
 
     async getItemDetails(itemId) {
-        let response = await fetch(`${HOSTNAME}:3000/products/${itemId}`)
+        let response = await fetch(`//${FETCH_HOSTNAME}:${FETCH_PORT}/products/${itemId}`)
         if (response.status == 200) {
             return await response.json()
         }
