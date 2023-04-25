@@ -60,7 +60,7 @@ server.use(router);
 async function runJsonServer() {
   let ip = await getIp()
   // console.log(ip);
-  server.listen(jsonServerPort, ip || localhost, () => {
+  server.listen(jsonServerPort, '0.0.0.0' || localhost, () => {
     console.log(`JSON SERVER RUNNING AT http://${ip || localhost}:${jsonServerPort}`)
   });
 
