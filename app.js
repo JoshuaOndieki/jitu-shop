@@ -1,3 +1,8 @@
+
+// USING HOSTED JSON SERVER AT https://wild-teal-tuna-gear.cyclic.app/
+// change hostname and port accordingly if running locally. e.g http://localhost:3000
+
+
 class Product{
     //deal with a single product
 
@@ -26,7 +31,7 @@ class Product{
         return html
     }
     async deleteProduct(id) {
-        await fetch(`http://localhost:3000/products/${id}`, {
+        await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${id}`, {
             method:'DELETE',
             headers:{
                 "Content-Type": "application/json"
@@ -34,7 +39,7 @@ class Product{
         })
     }
     async updateProduct(id){
-        const response = await fetch(`http://localhost:3000/products/${id}`)
+        const response = await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${id}`)
         const product = await response.json()
       
        this.prePopulate(product)
@@ -53,7 +58,7 @@ class Product{
 
     async sendUpdate(product){
         
-        await fetch(`http://localhost:3000/products/${product.id}`, {
+        await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${product.id}`, {
             method:'PUT',
             body:JSON.stringify(product),
             headers:{
@@ -78,7 +83,7 @@ class Product{
     }
     async addProduct(){
         const newProduct =new Product().readValues();
-        await fetch(' http://localhost:3000/products', {
+        await fetch(' https://wild-teal-tuna-gear.cyclic.app/products', {
             method:'POST',
             body:JSON.stringify(newProduct),
             headers:{
@@ -113,7 +118,7 @@ class ProductList{
      }
 
      async fetchProduct(){
-        const response = await fetch('http://localhost:3000/products')
+        const response = await fetch('https://wild-teal-tuna-gear.cyclic.app/products')
         const products = await response.json()
         return products
      }
@@ -194,7 +199,7 @@ class Cart {
     }
 
     async getItemDetails(itemId) {
-        let response = await fetch(`http://localhost:3000/products/${itemId}`)
+        let response = await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${itemId}`)
         if (response.status == 200) {
             return await response.json()
         }
