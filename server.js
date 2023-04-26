@@ -7,8 +7,9 @@ const cors = require('cors')
 port = 3000
 
 server.use(middlewares)
-server.use(router)
 server.use(cors())
+server.use(router)
+
 
 server.listen(port, ()=> {
     console.log(`JITU SHOP JSON SERVER LISTENING AT PORT: ${port}`);
