@@ -1,5 +1,5 @@
 
-// USING HOSTED JSON SERVER AT https://wild-teal-tuna-gear.cyclic.app/
+// USING HOSTED JSON SERVER AT https://jitu-shop-json-server.onrender.com/
 // change hostname and port accordingly if running locally. e.g http://localhost:3000
 
 
@@ -31,7 +31,7 @@ class Product{
         return html
     }
     async deleteProduct(id) {
-        await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${id}`, {
+        await fetch(`https://jitu-shop-json-server.onrender.com/products/${id}`, {
             method:'DELETE',
             headers:{
                 "Content-Type": "application/json"
@@ -39,7 +39,7 @@ class Product{
         })
     }
     async updateProduct(id){
-        const response = await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${id}`)
+        const response = await fetch(`https://jitu-shop-json-server.onrender.com/products/${id}`)
         const product = await response.json()
       
        this.prePopulate(product)
@@ -58,7 +58,7 @@ class Product{
 
     async sendUpdate(product){
         
-        await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${product.id}`, {
+        await fetch(`https://jitu-shop-json-server.onrender.com/products/${product.id}`, {
             method:'PUT',
             body:JSON.stringify(product),
             headers:{
@@ -83,7 +83,7 @@ class Product{
     }
     async addProduct(){
         const newProduct =new Product().readValues();
-        await fetch(' https://wild-teal-tuna-gear.cyclic.app/products', {
+        await fetch(' https://jitu-shop-json-server.onrender.com/products', {
             method:'POST',
             body:JSON.stringify(newProduct),
             headers:{
@@ -118,7 +118,7 @@ class ProductList{
      }
 
      async fetchProduct(){
-        const response = await fetch('https://wild-teal-tuna-gear.cyclic.app/products')
+        const response = await fetch('https://jitu-shop-json-server.onrender.com/products')
         const products = await response.json()
         return products
      }
@@ -199,7 +199,7 @@ class Cart {
     }
 
     async getItemDetails(itemId) {
-        let response = await fetch(`https://wild-teal-tuna-gear.cyclic.app/products/${itemId}`)
+        let response = await fetch(`https://jitu-shop-json-server.onrender.com/products/${itemId}`)
         if (response.status == 200) {
             return await response.json()
         }
