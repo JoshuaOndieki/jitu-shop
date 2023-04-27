@@ -37,6 +37,8 @@ class Product{
                 "Content-Type": "application/json"
             }
         })
+
+        await App.Init()
     }
     async updateProduct(id){
         const response = await fetch(`https://jitu-shop-json-server.onrender.com/products/${id}`)
@@ -65,6 +67,8 @@ class Product{
                 "Content-Type": "application/json"
             }
         })
+
+        await App.Init()
     }
     prePopulate(product){
         document.querySelector("#p_name").value=product.productName
@@ -90,6 +94,8 @@ class Product{
                 "Content-Type": "application/json"
             }
         })
+
+        await App.Init()
     }
 }
 
@@ -203,6 +209,7 @@ class Cart {
         if (response.status == 200) {
             return await response.json()
         }
+        this.removeItem(itemId, true) // if status !200, then item doesn't exist, remove from cart
         return false
     }
 
@@ -304,11 +311,13 @@ class Cart {
         let cartTotal = 0
         await cartItems.map(async cartItem => {
             let itemDetails = await this.getItemDetails(cartItem.id)
-            itemDetails.id = +itemDetails.id
-            itemDetails.quantity = cartItem.quantity
-            cartTotal += +itemDetails.productPrice * +itemDetails.quantity
-            document.getElementById('cart-total').innerHTML = '$' + cartTotal
-            this.renderItem(itemDetails)
+            if (itemDetails) {
+                itemDetails.id = +itemDetails.id
+                itemDetails.quantity = cartItem.quantity
+                cartTotal += +itemDetails.productPrice * +itemDetails.quantity
+                document.getElementById('cart-total').innerHTML = '$' + cartTotal
+                this.renderItem(itemDetails)
+            }
         })
         document.getElementById('cart-total').innerHTML = '$' + cartTotal
     }
